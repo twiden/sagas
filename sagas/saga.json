@@ -1,0 +1,42 @@
+{
+  "story":
+  [
+    {
+      "chapter": "http://127.0.0.1:8080/add/",
+      "operand": 7
+    },
+    {
+      "chapter": "http://127.0.0.1:8080/subtract/",
+      "operand": 2
+    },
+    {
+      "chapter": "http://127.0.0.1:8080/multiply/",
+      "operand": 4
+    },
+    {
+      "chapter": "http://127.0.0.1:8080/add/",
+      "operand": 89
+    },
+    {
+      "chapter": "http://127.0.0.1:8080/divide/",
+      "operand": 12
+    },
+    {
+      "chapter": "http://127.0.0.1:8080/subtract/",
+      "operand": 7
+    },
+    {
+      "chapter": "http://127.0.0.1:8080/add/",
+      "operand": 72
+    },
+    {
+      "chapter": "http://127.0.0.1:8080/divide/",
+      "operand": 2
+    },
+    {
+      "chapter": "http://127.0.0.1:8080/stop/"
+    }
+  ],
+  "value": 0,
+  "pointer": 0
+}
