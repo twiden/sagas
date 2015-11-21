@@ -54,13 +54,15 @@ class Math(object):
     def stop(self):
         return {'result': cherrypy.request.json['value']}
 
+    @cherrypy.tools.json_out()
+    @cherrypy.tools.json_in()
+    @cherrypy.expose
+    def index(self):
+        return pass_on(cherrypy.request.json)
 
-def run():
+
+if __name__ == "__main__":
     cherrypy.config.update({'server.socket_port': 8080, 'server.socket_host': '0.0.0.0'})
     cherrypy.tree.mount(Math(), "/")
     cherrypy.engine.start()
     cherrypy.engine.block()
-
-
-if __name__ == "__main__":
-    run()
