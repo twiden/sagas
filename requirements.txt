@@ -1,3 +1,6 @@
 CherryPy==3.8.0
+py==1.4.30
+pytest==2.8.3
 requests==2.8.1
+test-pkg==0.0
 wsgiref==0.1.2
