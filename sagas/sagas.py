@@ -3,7 +3,7 @@ import requests
 import operator
 
 
-def update_value(saga, what):
+def modify(saga, what):
     value = saga['value']
     pointer = saga['pointer']
     operation = saga['story'][pointer]
@@ -12,14 +12,21 @@ def update_value(saga, what):
     return saga
 
 
-def pass_on(saga):
+def next(saga):
     headers = {'Content-type': 'application/json', 'Accept': 'application/json'}
-    next = saga['story'][saga['pointer']]['chapter']
-    return requests.post(next, json=saga, headers=headers).json()
+    next_handler = saga['story'][saga['pointer']]['chapter']
+    return requests.post(next_handler, json=saga, headers=headers)
 
 
-def read_on(operator):
-    return pass_on(update_value(cherrypy.request.json, operator))
+def result(resp):
+    if resp.status_code == 200:
+        return resp.json()
+    else:
+        return {'errors': [{'url': resp.url, 'status_code': resp.status_code}]}
+
+
+def apply(operator):
+    return result(next(modify(cherrypy.request.json, operator)))
 
 
 class Math(object):
@@ -28,37 +35,37 @@ class Math(object):
     @cherrypy.tools.json_in()
     @cherrypy.expose
     def add(self):
-        return read_on(operator.add)
+        return apply(operator.add)
 
     @cherrypy.tools.json_out()
     @cherrypy.tools.json_in()
     @cherrypy.expose
     def subtract(self):
-        return read_on(operator.sub)
+        return apply(operator.sub)
 
     @cherrypy.tools.json_out()
     @cherrypy.tools.json_in()
     @cherrypy.expose
     def multiply(self, ):
-        return read_on(operator.mul)
+        return apply(operator.mul)
 
     @cherrypy.tools.json_out()
     @cherrypy.tools.json_in()
     @cherrypy.expose
     def divide(self):
-        return read_on(operator.div)
+        return apply(operator.div)
 
     @cherrypy.tools.json_out()
     @cherrypy.tools.json_in()
     @cherrypy.expose
     def stop(self):
-        return {'result': cherrypy.request.json['value']}
+        return {'result': cherrypy.request.json['value'], 'errors': []}
 
     @cherrypy.tools.json_out()
     @cherrypy.tools.json_in()
     @cherrypy.expose
     def index(self):
-        return pass_on(cherrypy.request.json)
+        return result(next(cherrypy.request.json))
 
 
 if __name__ == "__main__":
