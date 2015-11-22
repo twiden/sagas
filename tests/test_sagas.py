@@ -2,44 +2,45 @@ import cherrypy
 import requests
 from sagas.sagas import Math
 
+url = lambda x='': 'http://127.0.0.1:4711/{}/'.format(x)
 
 saga = {
     "story":
         [
             {
-                "chapter": "http://127.0.0.1:8080/add/",
+                "chapter": url('add'),
                 "operand": 7
             },
             {
-                "chapter": "http://127.0.0.1:8080/subtract/",
+                "chapter": url('subtract'),
                 "operand": 2
             },
             {
-                "chapter": "http://127.0.0.1:8080/multiply/",
+                "chapter": url('multiply'),
                 "operand": 4
             },
             {
-                "chapter": "http://127.0.0.1:8080/add/",
+                "chapter": url('add'),
                 "operand": 89
             },
             {
-                "chapter": "http://127.0.0.1:8080/divide/",
+                "chapter": url('divide'),
                 "operand": 12
             },
             {
-                "chapter": "http://127.0.0.1:8080/subtract/",
+                "chapter": url('subtract'),
                 "operand": 7
             },
             {
-                "chapter": "http://127.0.0.1:8080/add/",
+                "chapter": url('add'),
                 "operand": 72
             },
             {
-                "chapter": "http://127.0.0.1:8080/divide/",
+                "chapter": url('divide'),
                 "operand": 2
             },
             {
-                "chapter": "http://127.0.0.1:8080/stop/"
+                "chapter": url('stop')
             }
         ],
     "value": 9.3,
@@ -49,7 +50,7 @@ saga = {
 
 def setup_module():
     cherrypy.tree.mount(Math(), "/")
-    cherrypy.config.update({'server.socket_port': 8080})
+    cherrypy.config.update({'server.socket_port': 4711})
     cherrypy.engine.start()
 
 
@@ -59,5 +60,5 @@ def teardown_module():
 
 def test_performing_a_series_of_operations_as_the_story_of_a_saga():
     headers = {'Content-type': 'application/json', 'Accept': 'application/json'}
-    result = requests.post('http://127.0.0.1:8080/', json=saga, headers=headers).json()
+    result = requests.post(url(), json=saga, headers=headers).json()
     assert {'result': 38.59166666666667} == result
